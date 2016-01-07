@@ -1,5 +1,6 @@
+//Computer Graphics HW3 2013
 //NCCU CS
-//Xshading
+//Shading
 
 #include <math.h>
 #include <stdlib.h>
@@ -66,7 +67,7 @@ GLfloat colors[][3] = {
     {0.0,0.0,1.0}, {1.0,0.0,1.0}, {1.0,1.0,1.0}, {0.0,1.0,1.0}
 };
 
-
+/*
 inline void SwglTri(GLdouble x1, GLdouble y1, GLdouble z1,
 			 GLdouble x2, GLdouble y2, GLdouble z2,
 			 GLdouble x3, GLdouble y3, GLdouble z3,
@@ -226,10 +227,10 @@ void SwglLine(int index1, int index2)
 		     vertices[index2][0], vertices[index2][1], vertices[index2][2]);
 }
 
-
+*/
 void SolidQuad(int a, int b, int c, int d, bool USINGOPENGL)
 {
-	if(USINGOPENGL) {
+
 		glBegin(GL_TRIANGLES);
 			glVertex3fv(vertices[a]);
 			glVertex3fv(vertices[b]);
@@ -239,15 +240,15 @@ void SolidQuad(int a, int b, int c, int d, bool USINGOPENGL)
 			glVertex3fv(vertices[d]);
 			glVertex3fv(vertices[a]);
 		glEnd();
-	} else {
+	 /*else {
 		SwglTri(a, b, c);
 		SwglTri(c, d, a);
-	}
+	}*/
 }
-
+/*
 void swSolidCube(void)
 {
-    // map vertices to faces */
+    // map vertices to faces
     SolidQuad(1,0,3,2, false);
     SolidQuad(3,7,6,2, false);
     SolidQuad(7,3,0,4, false);
@@ -255,7 +256,7 @@ void swSolidCube(void)
     SolidQuad(4,5,6,7, false);
     SolidQuad(5,4,0,1, false);
 }
-
+*/
 void glSolidCube(void)
 {
     // map vertices to faces */
@@ -285,22 +286,22 @@ void OpenglLine(int index1, int index2)
 
 void WireQuad(int a, int b, int c , int d, bool USINGOPENGL)
 {
-	if(USINGOPENGL) {
+
 		OpenglLine(a, b);
 		OpenglLine(b, c);
 		OpenglLine(c, d);
 		OpenglLine(d, a);
-	} else {
+	 /*else {
 		SwglLine(a, b);
 		SwglLine(b, c);
 		SwglLine(c, d);
 		SwglLine(d, a);
-	}
+	}*/
 }
-
+/*
 void swWireCube(void)
 {
-    // map vertices to faces */
+    // map vertices to faces
     WireQuad(1,0,3,2, false);
     WireQuad(3,7,6,2, false);
     WireQuad(7,3,0,4, false);
@@ -308,7 +309,7 @@ void swWireCube(void)
     WireQuad(4,5,6,7, false);
     WireQuad(5,4,0,1, false);
 }
-
+*/
 void glWireCube(void)
 {
     // map vertices to faces */
@@ -346,7 +347,7 @@ void colorcube(void)
     polygon(4,5,6,7,4);
     polygon(5,4,0,1,5);
 }
-
+/*
 GLvoid swglmDraw(GLMmodel* model)
 {
 	GLfloat *n1, *n2, *n3;
@@ -378,19 +379,60 @@ GLvoid swglmDraw(GLMmodel* model)
     }
 
 }
-
+*/
 void softPath(void)
 {
     //Do not change, setting a basic transformation
-	glViewport(0, 0, winWidth, winHeight);
-
+	glViewport(winWidth/2, 0, winWidth/2, winHeight);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-	//glOrtho(-2.0, 2.0, -2.0, 2.0, -2.0, 2.0);
-	glOrtho(0, winWidth, 0, winHeight, -2.0, 2.0);
 
-	glMatrixMode(GL_MODELVIEW);
+
+
+	gluPerspective(60, (GLfloat)(winWidth*0.5)/winHeight, 0.1, 25); //(60, (GLfloat)(winWidth*0.5)/winHeight, 0.1, 25)
+	glGetDoublev(GL_PROJECTION_MATRIX, DEBUG_M);
+
+
+    glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	gluLookAt(1, 1, 4, 0, 0, 0, 0, 1, 0);//1, 1, 4, 0, 1, 0, 0, 1, 0
+	glGetDoublev(GL_MODELVIEW_MATRIX, DEBUG_M);
+
+
+
+    glPushMatrix();
+		glRotated(double(TICK), 0, 1, 0);
+		glRotated(double(TICK)*0.1, 0, 0, 1);
+		glTranslatef(LIGHTP, LIGHTP, 0);
+		glutSolidSphere(0.05, 32, 32);
+        glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glPopMatrix();
+
+
+	//world coordinate
+	/*
+	glColor3f(1, 1, 1);
+	OpenglLine(0, 0, 0, 3, 0, 0);
+	glColor3f(1, 1, 1);
+	OpenglLine(0, 0, 0, 0, 3, 0);
+	glColor3f(1, 1, 1);
+	OpenglLine(0, 0, 0, 0, 0, 3);
+    */
+
+	glPushMatrix();
+		//multiple trackball matrix
+		glMultMatrixd(TRACKM);
+
+		glScaled(MODELSCALE, MODELSCALE, MODELSCALE);
+		glColor3f(1.0, 1.0, 1.0); //(0.7, 1.0, 1.0)
+		glmDraw(MODEL, GLM_SMOOTH);//GLM_FLAT
+		//glutSolidSphere(1, 20, 20);
+	glPopMatrix();
+
+
+
+    //glOrtho(-2.0, 2.0, -2.0, 2.0, -3.0, 25.0);
 
 	//glColor3f(1, 0, 0);
 	//OpenglLine(winWidth/2, 0, 0, winWidth, winHeight, 0);
@@ -642,13 +684,8 @@ void display(void)
 	}
 
 	openglPath();
-
-	//we must disable the opengl's depth test, then the software depth test will work
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
 	softPath();
-	glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
+
 
     glutSwapBuffers();
 }
@@ -679,7 +716,7 @@ void myReshape(int w, int h)
     winWidth = w;
     winHeight = h;
 
-	swInitZbuffer(w/2, h);
+	//swInitZbuffer(w/2, h);
 }
 
 void spinCube()
@@ -718,7 +755,7 @@ void myKeys(unsigned char key, int x, int y)
 
 			Angle1=0, Angle2=0;
 			TICK=0;
-			MODELSCALE = 1.0;
+			MODELSCALE = 1.5;
 			LIGHTP = 1.5;
 			break;
 
@@ -781,7 +818,7 @@ int main(int argc, char **argv)
 
 
 	//Read model
-	MODEL = glmReadOBJ("bunny.obj");//Millennium_Falcon
+	MODEL = glmReadOBJ("Millennium_Falcon.obj");//bunny
 	glmUnitize(MODEL);
 	glmFacetNormals(MODEL);
 	glmVertexNormals(MODEL, 60);
@@ -816,14 +853,14 @@ int main(int argc, char **argv)
 	// BackgroundColor
 	glClearColor(0.7,0.7,0.7,0);
 
-	//
+	/*
 	swLightfv(GL_LIGHT0,GL_AMBIENT,ambientLight);
     swLightfv(GL_LIGHT0,GL_DIFFUSE,diffuseLight);
     swLightfv(GL_LIGHT0,GL_SPECULAR, specular);
 
     swMaterialfv(GL_FRONT, GL_SPECULAR, specref);
     swMateriali(GL_FRONT, GL_SHININESS, shininess);
-
+    */
 
     glutMainLoop();
 
