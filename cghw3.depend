@@ -1,0 +1,103 @@
+# depslib dependency file v1.0
+1324713217 source:c:\users\user\desktop\cghw\cghw3\cghw3\glee.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"GLee.h"
+	<Carbon/Carbon.h>
+
+1324713217 c:\users\user\desktop\cghw\cghw3\cghw3\glee.h
+	<windows.h>
+	<GL/gl.h>
+	<OpenGL/gl.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<stddef.h>
+
+1324713217 source:c:\users\user\desktop\cghw\cghw3\cghw3\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1324713217 c:\users\user\desktop\cghw\cghw3\cghw3\glm.h
+	"glee.h"
+
+1452069980 source:c:\users\user\desktop\cghw\cghw3\cghw3\hw3.cpp
+	<math.h>
+	<stdlib.h>
+	"GLee.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+	"swgl.h"
+	"math3d.h"
+	"glm.h"
+	<iostream>
+
+1388228260 c:\users\user\desktop\cghw\cghw3\cghw3\swgl.h
+	"GLee.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+
+1324713217 c:\users\user\desktop\cghw\cghw3\cghw3\math3d.h
+	<math.h>
+	<memory.h>
+
+1388229542 source:c:\users\user\desktop\cghw\cghw3\cghw3\swgl-hw3.cpp
+	"swgl.h"
+	<assert.h>
+	<math.h>
+
+1324713217 source:c:\users\user\desktop\cg_final_project\cghw3\glee.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"GLee.h"
+	<Carbon/Carbon.h>
+
+1324713217 c:\users\user\desktop\cg_final_project\cghw3\glee.h
+	<windows.h>
+	<GL/gl.h>
+	<OpenGL/gl.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<stddef.h>
+
+1324713217 source:c:\users\user\desktop\cg_final_project\cghw3\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1324713217 c:\users\user\desktop\cg_final_project\cghw3\glm.h
+	"glee.h"
+
+1452070525 source:c:\users\user\desktop\cg_final_project\cghw3\hw3.cpp
+	<math.h>
+	<stdlib.h>
+	"GLee.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+	"swgl.h"
+	"math3d.h"
+	"glm.h"
+	<iostream>
+
+1388228260 c:\users\user\desktop\cg_final_project\cghw3\swgl.h
+	"GLee.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+
+1324713217 c:\users\user\desktop\cg_final_project\cghw3\math3d.h
+	<math.h>
+	<memory.h>
+
+1388229542 source:c:\users\user\desktop\cg_final_project\cghw3\swgl-hw3.cpp
+	"swgl.h"
+	<assert.h>
+	<math.h>
+
