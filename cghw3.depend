@@ -101,3 +101,54 @@
 	<assert.h>
 	<math.h>
 
+1324713217 source:c:\users\user\documents\github\xst\glee.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"GLee.h"
+	<Carbon/Carbon.h>
+
+1324713217 c:\users\user\documents\github\xst\glee.h
+	<windows.h>
+	<GL/gl.h>
+	<OpenGL/gl.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<stddef.h>
+
+1324713217 source:c:\users\user\documents\github\xst\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1324713217 c:\users\user\documents\github\xst\glm.h
+	"glee.h"
+
+1452160740 source:c:\users\user\documents\github\xst\hw3.cpp
+	<math.h>
+	<stdlib.h>
+	"GLee.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+	"swgl.h"
+	"math3d.h"
+	"glm.h"
+	<iostream>
+
+1388228260 c:\users\user\documents\github\xst\swgl.h
+	"GLee.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+
+1324713217 c:\users\user\documents\github\xst\math3d.h
+	<math.h>
+	<memory.h>
+
+1388229542 source:c:\users\user\documents\github\xst\swgl-hw3.cpp
+	"swgl.h"
+	<assert.h>
+	<math.h>
+

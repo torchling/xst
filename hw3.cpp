@@ -610,7 +610,7 @@ void stopMotion(int x, int y)
 void displayfont()
 {
     //Font
-	char mss[30]="OpenGL";
+	char mss[30]="Ordinary Shading";
 	//sprintf(mss, "Score %d", Gamescore);
 	glColor3f(1.0, 0.0, 0.0);  //set font color
 	void * font = GLUT_BITMAP_9_BY_15;
@@ -620,7 +620,7 @@ void displayfont()
 		glutBitmapCharacter(font, mss[i]);
 	}
 
-	char mss1[30]="SoftwareGL";
+	char mss1[30]="Xshading";
 	glWindowPos2i(10+(winWidth/2), winHeight-20);    //set font start position
 	for(unsigned int i=0; i<strlen(mss1); i++) {
 		glutBitmapCharacter(font, mss1[i]);
@@ -773,7 +773,7 @@ int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(800, 400);
+    glutInitWindowSize(1000, 500);
     glutCreateWindow("CG_HW3");
 
     glutReshapeFunc(myReshape);
@@ -790,7 +790,7 @@ int main(int argc, char **argv)
 
 
 	//Read model
-	MODEL = glmReadOBJ("bunny.obj");//millenium-falcon
+	MODEL = glmReadOBJ("millenium-falcon.obj");//bunny
 	glmUnitize(MODEL);
 	glmFacetNormals(MODEL);
 	glmVertexNormals(MODEL, 60);
