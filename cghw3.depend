@@ -152,3 +152,49 @@
 	<assert.h>
 	<math.h>
 
+1452218395 source:c:\users\asus\documents\github\xst\glee.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"GLee.h"
+	<Carbon/Carbon.h>
+
+1452218395 c:\users\asus\documents\github\xst\glee.h
+	<windows.h>
+	<GL/gl.h>
+	<OpenGL/gl.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<stddef.h>
+
+1452218395 source:c:\users\asus\documents\github\xst\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1452218395 c:\users\asus\documents\github\xst\glm.h
+	"glee.h"
+
+1452218395 source:c:\users\asus\documents\github\xst\hw3.cpp
+	<math.h>
+	<stdlib.h>
+	"GLee.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+	"swgl.h"
+	"math3d.h"
+	"glm.h"
+	<iostream>
+
+1452218395 c:\users\asus\documents\github\xst\swgl.h
+	"GLee.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+
+1452218395 c:\users\asus\documents\github\xst\math3d.h
+	<math.h>
+	<memory.h>
+

@@ -10,19 +10,42 @@ GLdouble CTM_MV[16];	//Current Transformation Matrix: ModelView
 GLdouble CTM_P[16];		//Current Transformation Matrix: Projection
 GLdouble *CTM;			//Pointer to Current Transformation Matrix
 
+GLdouble MultTemp[16];
+GLdouble VectorTemp[4];
+
+GLint ViewportX , ViewportY ;
+GLsizei ViewportWidth, ViewportHeight;
+
+void MatrixMul(const double A[16], const double B[16])
+{
+	for(int i = 0;i <= 12; i=i+4)
+    {
+        for(int j = 0;j < 4; j++)
+            MultTemp[i + j] = B[i]*A[j] + B[i+1]*A[j+4] + B[i+2]*A[j+8] + B[i+3]*A[j+12];
+    }
+}
+void MatrixMulVector(const double A[16], const double v1[4])
+{
+	for(int i = 0;i <= 3; i=i+1)
+    {
+        VectorTemp[i] = A[i]*v1[0] + A[i+4]*v1[1] + A[i+8]*v1[2] + A[i+12]*v1[3];
+    }
+}
 
 bool swTransformation(const GLdouble h[4], GLdouble w[4])
 {
 	//p = CTM_P*CTM_MV*h
-
+    MatrixMul(CTM_P,CTM_MV);
+	MatrixMulVector( MultTemp , h );
 
 	//prespective division
-
+    for(int i = 0 ; i<4 ; i++)
+		VectorTemp[i] = VectorTemp[i] / VectorTemp[3];
 
 	//viewport transformation
-
-
-
+    w[0] =  (VectorTemp[0]+1) * (ViewportWidth / 2) + ViewportX;
+	w[1] =  (VectorTemp[1]+1) * (ViewportHeight / 2) + ViewportY;
+    w[2] =  VectorTemp[2];
 	return true;
 }
 
@@ -46,15 +69,58 @@ void writepixel(int x, int y, GLdouble r, GLdouble g, GLdouble b)
 bool BresenhamLine(int x1, int y1, int x2, int y2, GLdouble r, GLdouble g, GLdouble b)
 {
 
-
 	return true;
 }
 
 bool BresenhamLine(GLdouble x1, GLdouble y1, GLdouble z1, GLdouble x2, GLdouble y2, GLdouble z2, GLdouble r, GLdouble g, GLdouble b)
 {
+    bool steep = abs(y2 - y1) > abs(x2 - x1);
+    if(steep)
+    {
+		swap(x1 , y1);
+		swap(x2 , y2);
+	}
+	if(x1 > x2)
+    {
+		swap(x1 , x2);
+		swap(y1 , y2);
+		swap(z1 , z2);
+    }
+	int deltaX = x2 - x1;
+	int deltaY = abs(y2 - y1);
+	int error = deltaX / 2;
+	int ystep;
+	int y = y1;
 
+	if(y1 < y2) ystep = 1;
+	else ystep = -1;
 
+//-------------Zbuffer----------------------------
+        GLdouble curZ = z1;
+        GLdouble deltaZ = ZBuffer(x1, x2, z1, z2);
+//-------------Zbuffer----------------------------
 
+	for(int i = x1; i <= x2; i++)
+	{
+		if(steep)
+        {
+			writepixel(y , i, curZ, r, g, b);
+		}
+		else
+		{
+			writepixel(i , y, curZ, r, g, b);
+		}
+
+		error = error - deltaY;
+
+		if(error < 0)
+		{
+			y = y + ystep;
+			error = error + deltaX;
+		}
+		curZ += deltaZ;
+		//printf("%f",curZ);
+	}
 	return true;
 }
 
@@ -63,15 +129,119 @@ bool swTriangle(GLdouble x1, GLdouble y1, GLdouble z1,
 			 GLdouble x3, GLdouble y3, GLdouble z3,
 			 GLdouble r, GLdouble g, GLdouble b)
 {
+    GLdouble list[2000][3];
+	int listCount = 0;
 
+	if (x1 >= x2)
+    {
+		swap(x1 , x2);
+		swap(y1 , y2);
+		swap(z1 , z2);
+	}
+	if (x2 >= x3)
+	{
+		swap(x2 , x3);
+		swap(y2 , y3);
+		swap(z2 , z3);
+	}
+	if (x1 >= x2)
+	{
+		swap(x1 , x2);
+		swap(y1 , y2);
+		swap(z1 , z2);
+	}
 
+	GLdouble point[3][3];
+	point[0][0] = x1;
+	point[0][1] = y1;
+	point[0][2] = z1;
+
+	point[1][0] = x2;
+	point[1][1] = y2;
+	point[1][2] = z2;
+
+	point[2][0] = x3;
+	point[2][1] = y3;
+	point[2][2] = z3;
+
+	for (int k = 0 ; k <= 2 ; k++)
+    {
+		GLdouble x1,y1,z1,x2,y2,z2;
+		x1 = point[(k+3)%3][0];
+		y1 = point[(k+3)%3][1];
+		z1 = point[(k+3)%3][2];
+		x2 = point[(k+4)%3][0];
+		y2 = point[(k+4)%3][1];
+		z2 = point[(k+4)%3][2];
+
+		bool steep=abs(y2 - y1) > abs(x2 - x1);
+		if(steep)
+		{
+			swap(x1 , y1);
+			swap(x2 , y2);
+		}
+		if(x1 > x2)
+		{
+			swap(x1 , x2);
+			swap(y1 , y2);
+			swap(z1 , z2);
+		}
+
+        int deltaX = x2 - x1;
+        int deltaY = abs(y2 - y1);
+        int error = deltaX / 2;
+        int ystep;
+        int y = y1;
+
+        if(y1 < y2) ystep = 1;
+        else ystep = -1;
+
+//-------------Zbuffer----------------------------
+        GLdouble curZ = z1;
+        GLdouble deltaZ = ZBuffer(x1, x2, z1, z2);
+//-------------Zbuffer----------------------------
+
+		for(int i = x1; i <= x2; i++)
+		{
+			if(steep){
+				list[listCount][0]=y;
+				list[listCount][1]=i;
+				list[listCount][2]=curZ;
+			}
+			else{
+				list[listCount][0]=i;
+				list[listCount][1]=y;
+				list[listCount][2]=curZ;
+			}
+			error = error - deltaY;
+			if(error < 0)
+			{
+				y = y + ystep;
+				error = error + deltaX;
+			}
+			listCount++;
+			curZ += deltaZ;
+		}
+	}
+
+	for(int i = 0 ,j = 0 ;i < listCount && j < listCount; i++)
+    {
+        if(list[i][0]==list[j][0])
+        {
+            BresenhamLine(list[i][0],list[i][1],list[i][2],list[j][0],list[j][1],list[j][2],r,g,b);
+            i = 0;
+            j++;
+        }
+    }
 	return true;
 }
 
 
 bool swInitZbuffer(int width, int height)
 {
-
+    for (int i=0;i < 1920;i++)
+		for(int j=0;j < 1080;j++)
+			Zbuffer[i][j]=2;
 	return true;
 }
 
@@ -79,7 +249,9 @@ bool swInitZbuffer(int width, int height)
 
 bool swClearZbuffer()
 {
-
+    for (int i=0;i < 1920;i++)
+		for(int j=0;j < 1080;j++)
+			Zbuffer[i][j]=2;
 	return true;
 }
 
