@@ -1,4 +1,5 @@
 #include "swgl.h"
+#include <stdlib.h>
 #include <assert.h>
 #include <math.h>
 
@@ -57,13 +58,26 @@ bool swTransformation(const GLdouble h[4], GLdouble w[4])
 //GLdouble *ZBUFFER = NULL;
 //int Z_W=-1, Z_H=-1;
 
-void writepixel(int x, int y, GLdouble r, GLdouble g, GLdouble b)
+GLdouble Zbuffer[1920][1080];
+
+void swap(GLdouble &x,GLdouble &y)
+{
+	 GLdouble temp;
+	 temp = x;
+	 x = y;
+	 y = temp;
+}
+
+void writepixel(int x, int y,GLdouble z, GLdouble r, GLdouble g, GLdouble b)
 {
 	GLubyte map[1]={255};
-
-	glColor3d(r, g, b);
-	glWindowPos2i(x, y);
-	glBitmap(1, 1, 0, 0, 0, 0, map);
+    if(z < Zbuffer[x][y])
+    {
+        glColor3d(r, g, b);
+        glWindowPos2i(x, y);
+        glBitmap(1, 1, 0, 0, 0, 0, map);
+        Zbuffer[x][y] = z;
+    }
 }
 
 bool BresenhamLine(int x1, int y1, int x2, int y2, GLdouble r, GLdouble g, GLdouble b)
@@ -174,7 +188,7 @@ bool swTriangle(GLdouble x1, GLdouble y1, GLdouble z1,
 		y2 = point[(k+4)%3][1];
 		z2 = point[(k+4)%3][2];
 
-		bool steep=abs(y2 - y1) > abs(x2 - x1);
+		bool steep = abs(y2 - y1) > abs(x2 - x1);
 		if(steep)
 		{
 			swap(x1 , y1);
