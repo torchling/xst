@@ -167,7 +167,7 @@
 	<GL/glx.h>
 	<stddef.h>
 
-1452218395 source:c:\users\asus\documents\github\xst\glm.cpp
+1452437854 source:c:\users\asus\documents\github\xst\glm.cpp
 	<math.h>
 	<stdio.h>
 	<stdlib.h>
@@ -178,7 +178,7 @@
 1452218395 c:\users\asus\documents\github\xst\glm.h
 	"glee.h"
 
-1452218395 source:c:\users\asus\documents\github\xst\hw3.cpp
+1452459998 source:c:\users\asus\documents\github\xst\hw3.cpp
 	<math.h>
 	<stdlib.h>
 	"GLee.h"
@@ -189,7 +189,7 @@
 	"glm.h"
 	<iostream>
 
-1452218395 c:\users\asus\documents\github\xst\swgl.h
+1452461696 c:\users\asus\documents\github\xst\swgl.h
 	"GLee.h"
 	<GLUT/glut.h>
 	<GL/glut.h>
@@ -197,4 +197,10 @@
 1452218395 c:\users\asus\documents\github\xst\math3d.h
 	<math.h>
 	<memory.h>
+
+1452461186 source:c:\users\asus\documents\github\xst\swgl-hw3.cpp
+	"swgl.h"
+	<stdlib.h>
+	<assert.h>
+	<math.h>
 

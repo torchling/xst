@@ -37,14 +37,14 @@ bool swTransformation(const GLdouble h[4], GLdouble w[4]);
 //---------------------------------------------------------------------------
 //cghw2
 //---------------------------------------------------------------------------
-void writepixel(int x, int y, GLdouble r, GLdouble g, GLdouble b);
+void writepixel(int x, int y, GLdouble z, GLdouble r, GLdouble g, GLdouble b);
 
 //Bresenham's algorithm
 bool BresenhamLine(int x1, int y1, int x2, int y2, GLdouble r, GLdouble g, GLdouble b);
 bool BresenhamLine(GLdouble x1, GLdouble y1, GLdouble z1, GLdouble x2, GLdouble y2, GLdouble z2, GLdouble r, GLdouble g, GLdouble b);
 
-bool swTriangle(GLdouble x1, GLdouble y1, GLdouble z1, 
-			 GLdouble x2, GLdouble y2, GLdouble z2, 
+bool swTriangle(GLdouble x1, GLdouble y1, GLdouble z1,
+			 GLdouble x2, GLdouble y2, GLdouble z2,
 			 GLdouble x3, GLdouble y3, GLdouble z3,
 			 GLdouble r, GLdouble g, GLdouble b);
 
@@ -69,11 +69,11 @@ void swMateriali(GLenum face, GLenum pname, GLint param);
 //vertex position:	(x1, y1, z1)   in object space
 //vertex normal:	(nx1, ny1, nz1)
 //vertex color:		(r1, g1, b1)
-bool swTriangleG(GLdouble x1, GLdouble y1, GLdouble z1, 
-			 GLdouble x2, GLdouble y2, GLdouble z2, 
+bool swTriangleG(GLdouble x1, GLdouble y1, GLdouble z1,
+			 GLdouble x2, GLdouble y2, GLdouble z2,
 			 GLdouble x3, GLdouble y3, GLdouble z3,
-			 GLdouble nx1, GLdouble ny1, GLdouble nz1, 
-			 GLdouble nx2, GLdouble ny2, GLdouble nz2, 
+			 GLdouble nx1, GLdouble ny1, GLdouble nz1,
+			 GLdouble nx2, GLdouble ny2, GLdouble nz2,
 			 GLdouble nx3, GLdouble ny3, GLdouble nz3,
 			 GLdouble r1, GLdouble g1, GLdouble b1,
 			 GLdouble r2, GLdouble g2, GLdouble b2,
@@ -84,11 +84,11 @@ bool swTriangleG(GLdouble x1, GLdouble y1, GLdouble z1,
 //vertex position:	(x1, y1, z1)   in object space
 //vertex normal:	(nx1, ny1, nz1)
 //vertex color:		(r1, g1, b1)
-bool swTriangleP(GLdouble x1, GLdouble y1, GLdouble z1, 
-			 GLdouble x2, GLdouble y2, GLdouble z2, 
+bool swTriangleP(GLdouble x1, GLdouble y1, GLdouble z1,
+			 GLdouble x2, GLdouble y2, GLdouble z2,
 			 GLdouble x3, GLdouble y3, GLdouble z3,
-			 GLdouble nx1, GLdouble ny1, GLdouble nz1, 
-			 GLdouble nx2, GLdouble ny2, GLdouble nz2, 
+			 GLdouble nx1, GLdouble ny1, GLdouble nz1,
+			 GLdouble nx2, GLdouble ny2, GLdouble nz2,
 			 GLdouble nx3, GLdouble ny3, GLdouble nz3,
 			 GLdouble r1, GLdouble g1, GLdouble b1,
 			 GLdouble r2, GLdouble g2, GLdouble b2,

@@ -19,22 +19,27 @@ GLsizei ViewportWidth, ViewportHeight;
 
 void MatrixMul(const double A[16], const double B[16])
 {
+
 	for(int i = 0;i <= 12; i=i+4)
     {
         for(int j = 0;j < 4; j++)
             MultTemp[i + j] = B[i]*A[j] + B[i+1]*A[j+4] + B[i+2]*A[j+8] + B[i+3]*A[j+12];
     }
+
 }
 void MatrixMulVector(const double A[16], const double v1[4])
 {
+
 	for(int i = 0;i <= 3; i=i+1)
     {
         VectorTemp[i] = A[i]*v1[0] + A[i+4]*v1[1] + A[i+8]*v1[2] + A[i+12]*v1[3];
     }
+
 }
 
 bool swTransformation(const GLdouble h[4], GLdouble w[4])
 {
+
 	//p = CTM_P*CTM_MV*h
     MatrixMul(CTM_P,CTM_MV);
 	MatrixMulVector( MultTemp , h );
@@ -48,6 +53,7 @@ bool swTransformation(const GLdouble h[4], GLdouble w[4])
 	w[1] =  (VectorTemp[1]+1) * (ViewportHeight / 2) + ViewportY;
     w[2] =  VectorTemp[2];
 	return true;
+
 }
 
 
@@ -62,14 +68,17 @@ GLdouble Zbuffer[1920][1080];
 
 void swap(GLdouble &x,GLdouble &y)
 {
+
 	 GLdouble temp;
 	 temp = x;
 	 x = y;
 	 y = temp;
+
 }
 
-void writepixel(int x, int y,GLdouble z, GLdouble r, GLdouble g, GLdouble b)
+void writepixel(int x, int y, GLdouble z, GLdouble r, GLdouble g, GLdouble b)
 {
+
 	GLubyte map[1]={255};
     if(z < Zbuffer[x][y])
     {
@@ -78,6 +87,19 @@ void writepixel(int x, int y,GLdouble z, GLdouble r, GLdouble g, GLdouble b)
         glBitmap(1, 1, 0, 0, 0, 0, map);
         Zbuffer[x][y] = z;
     }
+
+}
+
+GLdouble ZBuffer(GLdouble x1, GLdouble x2, GLdouble z1, GLdouble z2)
+{
+    int deltaX = x2 - x1;
+    GLdouble deltaZ = z2 - z1;
+    GLdouble dZ = 0;
+    if(deltaX == 0)
+        dZ = 0;
+    else
+        dZ = deltaZ / deltaX ;
+    return dZ;
 }
 
 bool BresenhamLine(int x1, int y1, int x2, int y2, GLdouble r, GLdouble g, GLdouble b)
@@ -88,6 +110,7 @@ bool BresenhamLine(int x1, int y1, int x2, int y2, GLdouble r, GLdouble g, GLdou
 
 bool BresenhamLine(GLdouble x1, GLdouble y1, GLdouble z1, GLdouble x2, GLdouble y2, GLdouble z2, GLdouble r, GLdouble g, GLdouble b)
 {
+
     bool steep = abs(y2 - y1) > abs(x2 - x1);
     if(steep)
     {
@@ -135,6 +158,7 @@ bool BresenhamLine(GLdouble x1, GLdouble y1, GLdouble z1, GLdouble x2, GLdouble 
 		curZ += deltaZ;
 		//printf("%f",curZ);
 	}
+
 	return true;
 }
 
@@ -143,6 +167,7 @@ bool swTriangle(GLdouble x1, GLdouble y1, GLdouble z1,
 			 GLdouble x3, GLdouble y3, GLdouble z3,
 			 GLdouble r, GLdouble g, GLdouble b)
 {
+
     GLdouble list[2000][3];
 	int listCount = 0;
 
@@ -247,15 +272,20 @@ bool swTriangle(GLdouble x1, GLdouble y1, GLdouble z1,
             j++;
         }
     }
+
+
 	return true;
 }
 
 
+
 bool swInitZbuffer(int width, int height)
 {
+
     for (int i=0;i < 1920;i++)
 		for(int j=0;j < 1080;j++)
 			Zbuffer[i][j]=2;
+
 	return true;
 }
 
@@ -263,9 +293,11 @@ bool swInitZbuffer(int width, int height)
 
 bool swClearZbuffer()
 {
+
     for (int i=0;i < 1920;i++)
 		for(int j=0;j < 1080;j++)
 			Zbuffer[i][j]=2;
+
 	return true;
 }
 
@@ -446,7 +478,7 @@ bool swTriangleP(GLdouble x1, GLdouble y1, GLdouble z1,
 	//PhongShading(color_vertex[i], ...);
 
 
-	//Raterization:
+	//Raterization:........¬O«üRasterization¶Ü(?)
 
 	return true;
 }

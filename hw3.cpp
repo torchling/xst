@@ -50,7 +50,7 @@ GLdouble MODELSCALE = 1.5;
 GLdouble LIGHTP = 1.5;
 
 
-int DRAWTYPE = 0;// 0:hw1, 1:hw2, 2:Gouraud shading, 3: Phong Shading
+int DRAWTYPE = 3;// 0:hw1, 1:hw2, 2:Gouraud shading, 3: Phong Shading
 
 /*----------------------------------------------------------------------*/
 /*
@@ -110,9 +110,9 @@ inline void SwglTri(GLdouble x1, GLdouble y1, GLdouble z1,
 			swTransformation(h2, w2);
 			swTransformation(h3, w3);
 
-			writepixel(w1[0], w1[1], r1, g1, b1);
-			writepixel(w2[0], w2[1], r2, g2, b2);
-			writepixel(w3[0], w3[1], r3, g3, b3);
+			writepixel(w1[0], w1[1], 0, r1, g1, b1);//writepixel(w1[0], w1[1], r1, g1, b1)
+			writepixel(w2[0], w2[1], 0, r2, g2, b2);
+			writepixel(w3[0], w3[1], 0, r3, g3, b3);
 		}
 		break;
 
@@ -172,6 +172,7 @@ inline void SwglTri(GLdouble x1, GLdouble y1, GLdouble z1,
 
 }
 
+
 void SwglTri(int index1, int index2, int index3)
 {
 	SwglTri( vertices[index1][0], vertices[index1][1], vertices[index1][2],
@@ -205,8 +206,8 @@ void SwglLine(GLdouble x1, GLdouble y1, GLdouble z1, GLdouble x2, GLdouble y2, G
 	switch(DRAWTYPE) {
 		case 0:
 		{
-			writepixel(w1[0], w1[1], 1, 0, 0);
-			writepixel(w2[0], w2[1], 0, 1, 0);
+			writepixel(w1[0], w1[1], 0, 1, 0, 0); //writepixel(w1[0], w1[1], 1, 0, 0);
+			writepixel(w2[0], w2[1], 0, 0, 1, 0); //writepixel(w1[0], w1[1], 1, 0, 0);
 		}
 		break;
 
@@ -227,6 +228,7 @@ void SwglLine(int index1, int index2)
 }
 
 
+
 void SolidQuad(int a, int b, int c, int d, bool USINGOPENGL)
 {
 	if(USINGOPENGL) {
@@ -245,9 +247,10 @@ void SolidQuad(int a, int b, int c, int d, bool USINGOPENGL)
 	}
 }
 
+
 void swSolidCube(void)
 {
-    // map vertices to faces */
+    // map vertices to faces
     SolidQuad(1,0,3,2, false);
     SolidQuad(3,7,6,2, false);
     SolidQuad(7,3,0,4, false);
@@ -298,9 +301,10 @@ void WireQuad(int a, int b, int c , int d, bool USINGOPENGL)
 	}
 }
 
+
 void swWireCube(void)
 {
-    // map vertices to faces */
+    // map vertices to faces
     WireQuad(1,0,3,2, false);
     WireQuad(3,7,6,2, false);
     WireQuad(7,3,0,4, false);
@@ -347,6 +351,7 @@ void colorcube(void)
     polygon(5,4,0,1,5);
 }
 
+
 GLvoid swglmDraw(GLMmodel* model)
 {
 	GLfloat *n1, *n2, *n3;
@@ -357,7 +362,9 @@ GLvoid swglmDraw(GLMmodel* model)
 	glGetDoublev(GL_CURRENT_COLOR, col);
 
     for (unsigned int i = 0; i < model->numtriangles; i++) {
+
         GLMtriangle* triangle = &(model->triangles[i]);
+        //GLfloat* vertices = &(model->vertices[i]);¶Ã¥[ªº
 
         n1 = &model->normals[3 * triangle->nindices[0]];
         v1 = &model->vertices[3 * triangle->vindices[0]];
@@ -365,6 +372,23 @@ GLvoid swglmDraw(GLMmodel* model)
         v2 = &model->vertices[3 * triangle->vindices[1]];
 		n3 = &model->normals[3 * triangle->nindices[2]];
         v3 = &model->vertices[3 * triangle->vindices[2]];
+
+
+/*
+        if(i<20){
+        std::cout<< model->numtriangles <<'\n';
+        std::cout<< triangle->vindices[0] <<" "<< triangle->vindices[1] <<" "<< triangle->vindices[2] <<'\n';
+        std::cout<< v1[0] <<" "<< v1[1] <<" "<< v1[2] <<'\n';
+        //std::cout<< model->vertices[3 * triangle->vindices[0]+ 0] <<" "<< model->vertices[3 * triangle->vindices[0] + 1] <<" "<< model->vertices[3 * triangle->vindices[0] + 2] <<'\n';
+
+        std::cout<< n1[0] <<" "<< n1[1] <<" "<< n1[2] <<'\n';
+
+        if(i==19){
+            std::cout<<"oooooooooooooooooooo"<<'\n';
+        }
+        }
+*/
+
 
 		SwglTri(v1[0], v1[1], v1[2],
 			    v2[0], v2[1], v2[2],
@@ -375,6 +399,7 @@ GLvoid swglmDraw(GLMmodel* model)
 				col[0], col[1], col[2],
 			    col[0], col[1], col[2],
 				col[0], col[1], col[2]);
+
     }
 
 }
@@ -397,7 +422,7 @@ void softPath(void)
 
 
 	//
-	//replace the opengl function in openglPath() to sotfgl
+	//replace the opengl function in openglPath() to softgl
     //
 
 /*
@@ -442,9 +467,12 @@ void softPath(void)
 
 		swScaled(MODELSCALE, MODELSCALE, MODELSCALE);
 		glColor3f(0.7, 1.0, 1.0);
-		swglmDraw(MODEL);
-	swPopMatrix();
 
+		swglmDraw(MODEL);
+
+	swPopMatrix();
+*/
+/*
 	swPushMatrix();
 		swTranslated(0, 2, 0);
 		swMultMatrixd(TRACKM);
