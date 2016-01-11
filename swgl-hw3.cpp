@@ -315,7 +315,9 @@ GLdouble  _ambientMaterial[] = { 0.3, 0.3, 0.3, 1.0 };
 GLdouble  _diffuseMaterial[] = { 0.7, 0.7, 0.7, 1.0 };
 GLdouble  _specularMaterial[] = { 1.0, 1.0, 1.0, 1.0 };
 GLdouble  _shininessMaterial = 128.0;
-
+GLdouble  color1[] = { 1.0, 1.0, 1.0 };
+GLdouble  color2[] = { 1.0, 1.0, 1.0 };
+GLdouble  color3[] = { 1.0, 1.0, 1.0 };
 
 void writepixelfast(int x, int y, GLdouble r, GLdouble g, GLdouble b)
 {
@@ -423,14 +425,68 @@ bool PhongShading(GLdouble color[3],
 {
 	color[0] = color[1] = color[2] = 0.0;
 
-	//caculate vectors
+    double rx = 0.0;
+    double ry = 0.0;
+    double rz = 0.0;
 
 
+    double vx = -px;
+    double vy = -py;
+    double vz = -pz;
+
+    double lenthOfView  = sqrt(vx*vx+vy*vy+vz*vz);
+
+    vx=vx/lenthOfView;
+    vy=vy/lenthOfView;
+    vz=vz/lenthOfView;
+
+
+    color[0] = 1.0;//Kr*Ir;
+    color[1] = 1.0;//Kg*Ig;
+    color[2] = 1.0;//Kb*Ib;
+
+    double ambient = 1;
+
+    lx=lx-px;
+    ly=ly-py;
+    lz=lz-pz;
+
+    double lenthOfLight  = sqrt(lx*lx+ly*ly+lz*lz);
+
+    lx=lx/lenthOfLight;
+    ly=ly/lenthOfLight;
+    lz=lz/lenthOfLight;
+
+
+    double lenthOfNormal = sqrt(nx*nx+ny*ny+nz*nz);
+
+    nx=nx/lenthOfNormal;
+    ny=ny/lenthOfNormal;
+    nz=nz/lenthOfNormal;
+
+    //diffuse = ldotn = Light dot Normal
+    double ldotn = lx*nx+ly*ny+lz*nz;
+
+    rx=2*ldotn*nx-lx;
+    ry=2*ldotn*ny-ly;
+    rz=2*ldotn*nz-lz;
+
+
+    double specular = vx*rx+vy*ry+vz*rz;
+	specular = pow(specular,_shininessMaterial);
+
+	//calculate vectors
+
+
+
+    color[0] = color[0]*ambient + color[0]*ldotn + color[0]*specular;
+    color[1] = color[1]*ambient + color[1]*ldotn + color[1]*specular;
+    color[2] = color[2]*ambient + color[2]*ldotn + color[2]*specular;
 
 	//color = ambient + diffuse + specular
 
-
 	return true;
+
 }
 
 
@@ -475,10 +531,26 @@ bool swTriangleP(GLdouble x1, GLdouble y1, GLdouble z1,
 
 
 	//modified Pong shading equation in each vertex
-	//PhongShading(color_vertex[i], ...);
+	PhongShading(   color1,
+                    x1, y1, z1,
+                    nx1, ny1, nz1,
+                    _lightPos[0], _lightPos[1], _lightPos[2],
+                    r1, g1, b1);
+
+    PhongShading(   color2,
+                    x2, y2, z2,
+                    nx2, ny2, nz2,
+                    _lightPos[0], _lightPos[1], _lightPos[2],
+                    r2, g2, b2);
+
+    PhongShading(   color3,
+                    x3, y3, z3,
+                    nx3, ny3, nz3,
+                    _lightPos[0], _lightPos[1], _lightPos[2],
+                    r3, g3, b3);
 
 
-	//Raterization:........¬O«üRasterization¶Ü(?)
+	//Raterization:........Rasterization(?)
 
 	return true;
 }

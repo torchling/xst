@@ -28,6 +28,7 @@
 #define M_PI 3.14159
 #endif
 
+int     cnt=0;
 
 int 	winWidth, winHeight;
 
@@ -52,10 +53,12 @@ GLdouble LIGHTP = 1.5;
 
 int DRAWTYPE = 3;// 0:hw1, 1:hw2, 2:Gouraud shading, 3: Phong Shading
 
+
+//GLfloat adjust[4][2570];//2557 num of vertices.
 /*----------------------------------------------------------------------*/
-/*
-** Draw the wireflame cube.
-*/
+
+
+
 GLfloat vertices[][3] = {
     {-1.0,-1.0,-1.0},{1.0,-1.0,-1.0}, {1.0,1.0,-1.0}, {-1.0,1.0,-1.0},
     {-1.0,-1.0,1.0}, {1.0,-1.0,1.0}, {1.0,1.0,1.0}, {-1.0,1.0,1.0}
@@ -65,6 +68,135 @@ GLfloat colors[][3] = {
     {0.0,0.0,0.0},{1.0,0.0,0.0}, {1.0,1.0,0.0}, {0.0,1.0,0.0},
     {0.0,0.0,1.0}, {1.0,0.0,1.0}, {1.0,1.0,1.0}, {0.0,1.0,1.0}
 };
+
+//一堆垃圾
+void useless(){
+/*
+float glmMax(GLfloat a, GLfloat b)
+{
+    if (b > a)
+        return b;
+    return a;
+}
+
+float glmDot(GLfloat* u, GLfloat* v)
+{
+    //assert(u); assert(v);
+
+    return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
+}
+
+void findAdjustway(GLMmodel* model)
+{
+
+	GLfloat *n1, *n2, *n3;
+	GLfloat *v1, *v2, *v3;
+
+
+    //12 21 23 32 31 13
+    GLfloat n1minusn2[3];    //GLfloat v1minusv2[3];
+
+    GLfloat n2minusn1[3];    //GLfloat v2minusv1[3];
+
+    GLfloat n2minusn3[3];    //GLfloat v2minusv3[3];
+
+    GLfloat n3minusn2[3];    //GLfloat v3minusv2[3];
+
+    GLfloat n3minusn1[3];    //GLfloat v3minusv1[3];
+
+    GLfloat n1minusn3[3];    //GLfloat v1minusv3[3];
+
+    GLfloat viminusvii[3][6];
+    GLfloat nndotvv[6];
+
+	//get current color
+	GLdouble col[4];
+	glGetDoublev(GL_CURRENT_COLOR, col);
+
+    for (int i = 0; i < model->numtriangles; i++) {
+
+        GLMtriangle* triangle = &(model->triangles[i]);
+        //GLfloat* vertices = &(model->vertices[i]);
+
+        n1 = &model->normals[3 * triangle->nindices[0]];
+        v1 = &model->vertices[3 * triangle->vindices[0]];
+        n2 = &model->normals[3 * triangle->nindices[1]];
+        v2 = &model->vertices[3 * triangle->vindices[1]];
+		n3 = &model->normals[3 * triangle->nindices[2]];
+        v3 = &model->vertices[3 * triangle->vindices[2]];
+
+        //(ni-nj)dot()
+        for(int j=0;j<3;j++){
+            n1minusn2[j]=(n1[j]-n2[j]);
+            viminusvii[j][0]=(v1[j]-v2[j]);
+            //v1minusv2[j]=(v1[j]-v2[j]);
+
+            n2minusn1[j]=(n2[j]-n1[j]);
+            viminusvii[j][2]=(v2[j]-v1[j]);
+            //v2minusv1[j]=(v2[j]-v1[j]);
+
+            n2minusn3[j]=(n2[j]-n3[j]);
+            viminusvii[j][3]=(v2[j]-v3[j]);
+            //v2minusv3[j]=(v2[j]-v3[j]);
+
+            n3minusn2[j]=(n3[j]-n2[j]);
+            viminusvii[j][5]=(v3[j]-v2[j]);
+            //v3minusv2[j]=(v3[j]-v2[j]);
+
+            n3minusn1[j]=(n3[j]-n1[j]);
+            viminusvii[j][4]=(v3[j]-v1[j]);
+            //v3minusv1[j]=(v3[j]-v1[j]);
+
+            n1minusn3[j]=(n1[j]-n3[j]);
+            viminusvii[j][1]=(v1[j]-v3[j]);
+            //v1minusv3[j]=(v1[j]-v3[j]);
+
+        }
+        nndotvv[0] = glmDot(n1minusn2,viminusvii[0]);//12
+        nndotvv[2] = glmDot(n2minusn1,viminusvii[2]);//21
+        nndotvv[3] = glmDot(n2minusn3,viminusvii[3]);//23
+        nndotvv[5] = glmDot(n3minusn2,viminusvii[5]);//32
+        nndotvv[4] = glmDot(n3minusn1,viminusvii[4]);//31
+        nndotvv[1] = glmDot(n1minusn3,viminusvii[1]);//13
+
+        //decide witch derection is better
+        for(int k=0;k<3;k++){
+                if(adjust[0][ triangle->nindices[k] ]==0){
+                    if( nndotvv[2*k] > nndotvv[2*k+1] ){
+                        adjust[0][ triangle->nindices[k] ] = 0.1*viminusvii[0][2*k];
+                        adjust[1][ triangle->nindices[k] ] = 0.1*viminusvii[1][2*k];
+                        adjust[2][ triangle->nindices[k] ] = 0.1*viminusvii[2][2*k];
+                        adjust[3][ triangle->nindices[k] ] = nndotvv[2*k];
+                    }
+                    else{
+                        adjust[0][ triangle->nindices[k] ] = 0.1*viminusvii[0][2*k+1];
+                        adjust[1][ triangle->nindices[k] ] = 0.1*viminusvii[1][2*k+1];
+                        adjust[2][ triangle->nindices[k] ] = 0.1*viminusvii[2][2*k+1];
+                        adjust[3][ triangle->nindices[k] ] = nndotvv[2*k+1];
+                    }
+                }
+                else if( glmMax ( nndotvv[2*k], nndotvv[2*k+1] ) > adjust[3][ triangle->nindices[k] ]){
+                    if( nndotvv[2*k] > nndotvv[2*k+1] ){
+                        adjust[0][ triangle->nindices[k] ] = 0.1*viminusvii[0][2*k];
+                        adjust[1][ triangle->nindices[k] ] = 0.1*viminusvii[1][2*k];
+                        adjust[2][ triangle->nindices[k] ] = 0.1*viminusvii[2][2*k];
+                        adjust[3][ triangle->nindices[k] ] = nndotvv[2*k];
+                    }
+                    else{
+                        adjust[0][ triangle->nindices[k] ] = 0.1*viminusvii[0][2*k+1];
+                        adjust[1][ triangle->nindices[k] ] = 0.1*viminusvii[1][2*k+1];
+                        adjust[2][ triangle->nindices[k] ] = 0.1*viminusvii[2][2*k+1];
+                        adjust[3][ triangle->nindices[k] ] = nndotvv[2*k+1];
+                    }
+                }
+        }
+
+    }
+
+
+}
+*/
+}
 
 
 inline void SwglTri(GLdouble x1, GLdouble y1, GLdouble z1,
@@ -364,7 +496,7 @@ GLvoid swglmDraw(GLMmodel* model)
     for (unsigned int i = 0; i < model->numtriangles; i++) {
 
         GLMtriangle* triangle = &(model->triangles[i]);
-        //GLfloat* vertices = &(model->vertices[i]);�å[��
+        //GLfloat* vertices = &(model->vertices[i]);
 
         n1 = &model->normals[3 * triangle->nindices[0]];
         v1 = &model->vertices[3 * triangle->vindices[0]];
@@ -376,36 +508,95 @@ GLvoid swglmDraw(GLMmodel* model)
 
 /*
         if(i<20){
+
         std::cout<< model->numtriangles <<'\n';
+        std::cout<< model->numvertices <<'\n';
         std::cout<< triangle->vindices[0] <<" "<< triangle->vindices[1] <<" "<< triangle->vindices[2] <<'\n';
         std::cout<< v1[0] <<" "<< v1[1] <<" "<< v1[2] <<'\n';
         //std::cout<< model->vertices[3 * triangle->vindices[0]+ 0] <<" "<< model->vertices[3 * triangle->vindices[0] + 1] <<" "<< model->vertices[3 * triangle->vindices[0] + 2] <<'\n';
 
         std::cout<< n1[0] <<" "<< n1[1] <<" "<< n1[2] <<'\n';
 
+        std::cout<< col[0] <<" "<< col[1] <<" "<< col[2] <<'\n';
         if(i==19){
-            std::cout<<"oooooooooooooooooooo"<<'\n';
-        }
+                std::cout<<"oooooooooooooooooooo"<<'\n';
+            }
         }
 */
 
+        for(int i=0;i<3;i++){
+            n1[i] = n1[i] + 0.1;
+            n2[i] = n2[i] + 0.1;
+            n3[i] = n3[i] + 0.1;
+        }
 
-		SwglTri(v1[0], v1[1], v1[2],
-			    v2[0], v2[1], v2[2],
-				v3[0], v3[1], v3[2],
-				n1[0], n1[1], n1[2],
-			    n2[0], n2[1], n2[2],
-				n3[0], n3[1], n3[2],
-				col[0], col[1], col[2],
-			    col[0], col[1], col[2],
-				col[0], col[1], col[2]);
+        glBegin(GL_TRIANGLES);
+        for (int i = 0; i < model->numtriangles; i++) {
+
+
+            glNormal3fv(n1);
+            glVertex3fv(v1);
+
+            glNormal3fv(n2);
+            glVertex3fv(v2);
+
+            glNormal3fv(n3);
+            glVertex3fv(v3);
+
+        }
+        glEnd();
+
 
     }
+
 
 }
 
 void softPath(void)
 {
+
+    glViewport(winWidth/2, 0, winWidth/2, winHeight);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+
+
+	gluPerspective(60, (GLfloat)(winWidth*0.5)/winHeight, 0.1, 25); //(60, (GLfloat)(winWidth*0.5)/winHeight, 0.1, 25)
+	glGetDoublev(GL_PROJECTION_MATRIX, DEBUG_M);
+
+
+    glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	gluLookAt(1, 1, 4, 0, 0, 0, 0, 1, 0);//1, 1, 4, 0, 1, 0, 0, 1, 0
+	glGetDoublev(GL_MODELVIEW_MATRIX, DEBUG_M);
+
+
+
+    glPushMatrix();
+		glRotated(double(TICK), 0, 1, 0);
+		glRotated(double(TICK)*0.1, 0, 0, 1);
+		glTranslatef(LIGHTP, LIGHTP, 0);
+		glutSolidSphere(0.05, 32, 32);
+        glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glPopMatrix();
+
+	glPushMatrix();
+		//multiple trackball matrix
+		glMultMatrixd(TRACKM);
+
+		glScaled(MODELSCALE, MODELSCALE, MODELSCALE);
+		glColor3f(1.0, 1.0, 1.0); //(0.7, 1.0, 1.0)
+        swglmDraw(MODEL);//自造
+		//glmDraw(MODEL, GLM_SMOOTH);//GLM_FLAT
+
+		//glutSolidSphere(1, 20, 20);
+	glPopMatrix();
+
+
+	/*---------------------------------------*/
+{/*
     //Do not change, setting a basic transformation
 	glViewport(0, 0, winWidth, winHeight);
 
@@ -425,7 +616,6 @@ void softPath(void)
 	//replace the opengl function in openglPath() to softgl
     //
 
-/*
 	swClearZbuffer();
 
 
@@ -489,6 +679,7 @@ void softPath(void)
 	swPopMatrix();
 */
 }
+}
 
 void openglPath(void)
 {
@@ -536,27 +727,10 @@ void openglPath(void)
 
 		glScaled(MODELSCALE, MODELSCALE, MODELSCALE);
 		glColor3f(1.0, 1.0, 1.0); //(0.7, 1.0, 1.0)
-		glmDraw(MODEL, GLM_SMOOTH);//GLM_FLAT
+		glmDraw(MODEL, GLM_SMOOTH);//GLM_FLAT  GLM_SMOOTH
 		//glutSolidSphere(1, 20, 20);
 	glPopMatrix();
-  /*
-	glPushMatrix();
-		glTranslated(0, 2, 0);
-		glMultMatrixd(TRACKM);
 
-		glBegin(GL_TRIANGLES);
-			glNormal3f(0, 0, 1);
-			glColor3f(1, 0, 0);
-			glVertex3f(-1, 0, 0);
-
-			glColor3f(0, 1, 0);
-			glVertex3f(1, 0, 0);
-
-			glColor3f(0, 0, 1);
-			glVertex3f(0, 1, 0);
-		glEnd();
-	glPopMatrix();
-*/
 }
 
 /*----------------------------------------------------------------------*/
@@ -672,11 +846,12 @@ void display(void)
 	openglPath();
 
 	//we must disable the opengl's depth test, then the software depth test will work
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
+
+	//glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_LIGHTING);
 	softPath();
-	glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_DEPTH_TEST);
 
     glutSwapBuffers();
 }
@@ -746,7 +921,7 @@ void myKeys(unsigned char key, int x, int y)
 
 			Angle1=0, Angle2=0;
 			TICK=0;
-			MODELSCALE = 1.0;
+			MODELSCALE = 1.5;
 			LIGHTP = 1.5;
 			break;
 
@@ -790,6 +965,13 @@ void myKeys(unsigned char key, int x, int y)
 
 int main(int argc, char **argv)
 {
+    if(cnt<1){
+            std::cout<<"main"<<'\n';
+
+            //findAdjustway(MODEL);
+
+            cnt+=1;
+    }
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(1000, 500);
@@ -845,13 +1027,14 @@ int main(int argc, char **argv)
 	glClearColor(0.7,0.7,0.7,0);
 
 	//
+	/*
 	swLightfv(GL_LIGHT0,GL_AMBIENT,ambientLight);
     swLightfv(GL_LIGHT0,GL_DIFFUSE,diffuseLight);
     swLightfv(GL_LIGHT0,GL_SPECULAR, specular);
 
     swMaterialfv(GL_FRONT, GL_SPECULAR, specref);
     swMateriali(GL_FRONT, GL_SHININESS, shininess);
-
+*/
 
     glutMainLoop();
 
